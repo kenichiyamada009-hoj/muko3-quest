@@ -84,8 +84,8 @@ const ENEMIES = [
     id: 'baba',
     name: '馬場',
     lv: 51,
-    hp: 320, maxHp: 320,
-    atk: [55, 82],
+    hp: 420, maxHp: 420,
+    atk: [62, 92],
     def: 18,
     isBoss: true,
     introMsg: 'スナックのママ　馬場が\n本性を現した！',
@@ -481,7 +481,7 @@ async function enemyTurn() {
     await typeText(msgEl, `${e.name}は　かまえた！\n守備力が　あがった！`);
 
   } else if (act === 'donperi') {
-    const dmg = Math.max(1, rand(80, 120));
+    const dmg = Math.max(1, rand(95, 135));
     p.hp = Math.max(0, p.hp - dmg);
     await typeText(msgEl, `馬場は　ドンペリを　かかげた！\nドンペリ　マジック！！\n市川に　${dmg}の　大ダメージ！！`);
 
@@ -500,7 +500,7 @@ async function enemyTurn() {
     await typeText(msgEl, `馬場が　構えた！\n\n「損益計算！貸借対照！\nスワット分析！！\n自己資本利益率！！！\n総資産利益率　ビーーーーム！！」\n\n市川に　${dmg}のダメージ！！`);
 
   } else if (act === 'smoke') {
-    const heal = rand(60, 100);
+    const heal = rand(90, 130);
     G.enemy.currentHp = Math.min(G.enemy.maxHp, G.enemy.currentHp + heal);
     await typeText(msgEl, `馬場は　煙草に　火をつけた。\nうまそうに　一服した。\n馬場の　HPが　${heal}　回復した！`);
 
