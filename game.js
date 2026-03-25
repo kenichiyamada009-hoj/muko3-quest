@@ -42,7 +42,7 @@ const ENEMIES = [
     lv: 47,
     hp: 100, maxHp: 100,
     atk: [28, 45],
-    def: 28,
+    def: 15,
     isBoss: false,
     introMsg: '古株職人が　腕を組んで　立っていた！',
     speech: '「で？　まさか　給料泥棒の\n婿さんじゃないよな？」',
@@ -475,7 +475,7 @@ async function enemyTurn() {
     await typeText(msgEl, e.quoteMsg + '\n市川は　こんらん状態になった！');
 
   } else if (act === 'guard') {
-    G.enemy.def = Math.min(50, G.enemy.def + 10);
+    G.enemy.def = 30;
     await typeText(msgEl, `${e.name}は　かまえた！\n守備力が　あがった！`);
 
   } else if (act === 'donperi') {
