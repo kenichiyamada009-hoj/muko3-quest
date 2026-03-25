@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000033">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>婿3クエスト</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game">
+
+    <!-- タイトル画面 -->
+    <div id="screen-title" class="screen active">
+      <img id="title-img" src="Gemini_Generated_Image_ecrvo1ecrvo1ecrv.png" alt="婿3クエスト">
+      <div id="title-menu" class="window">
+        <div class="menu-item active-item" data-action="newgame">&gt; 冒険の書を作る</div>
+        <div class="menu-item" data-action="continue">　 冒険を続ける</div>
+      </div>
+    </div>
+
+    <!-- 変身アニメーション -->
+    <div id="screen-transform" class="screen">
+      <div id="transform-scene">
+        <div id="transform-label"></div>
+        <div id="transform-card-wrap">
+          <div id="transform-card">
+            <img id="transform-real" class="transform-face" src="" alt="">
+            <img id="transform-chara" class="transform-face transform-back" src="" alt="">
+          </div>
+        </div>
+        <div id="transform-caption"></div>
+      </div>
+    </div>
+
+    <!-- フィールド -->
+    <div id="screen-field" class="screen">
+      <div id="field-map">
+        <div id="field-progress"></div>
+        <div id="field-chars">
+          <img class="field-char" id="fc-ichikawa" src="field_ichikawa.png" alt="市川">
+          <img class="field-char" id="fc-baba" src="field_baba.png" alt="ババ">
+          <img class="field-char" id="fc-kohayakawa" src="field_kohayakawa.png" alt="小早川">
+        </div>
+      </div>
+      <div id="field-info" class="window">
+        <div id="field-location"></div>
+        <div id="field-desc"></div>
+      </div>
+      <div id="field-advance" class="window btn-advance">進　む</div>
+    </div>
+
+    <!-- オープニング -->
+    <div id="screen-opening" class="screen">
+      <div id="opening-portrait">
+        <img src="Gemini_Generated_Image_atnpquatnpquatnp.png" alt="市川">
+      </div>
+      <div id="opening-text" class="window"></div>
+      <div class="tap-hint">― タップして続ける ―</div>
+    </div>
+
+    <!-- バトル画面 -->
+    <div id="screen-battle" class="screen">
+
+      <!-- 上部：戦場背景 + 敵 -->
+      <div id="battle-field">
+        <div id="enemy-info-row">
+          <div id="enemy-name-lv"></div>
+          <div id="enemy-hp-wrap">
+            <span class="label">HP</span>
+            <div class="bar-outer"><div id="enemy-hp-bar"></div></div>
+          </div>
+        </div>
+        <div id="enemy-graphic"></div>
+      </div>
+
+      <!-- メッセージ -->
+      <div id="battle-message" class="window"></div>
+      <div class="tap-hint" id="battle-tap-hint" style="display:none">― タップして続ける ―</div>
+
+      <!-- パーティステータス -->
+      <div id="battle-party">
+        <div class="party-member" id="party-ichikawa">
+          <img class="party-face" src="Gemini_Generated_Image_atnpquatnpquatnp.png" alt="市川">
+          <div class="party-stats">
+            <div class="party-name">市川 LV<span id="p-lv">51</span></div>
+            <div class="stat-row">
+              <span class="label">HP</span>
+              <div class="bar-outer"><div id="player-hp-bar"></div></div>
+              <span id="p-hp">512/512</span>
+            </div>
+            <div class="stat-row">
+              <span class="label">MP</span>
+              <div class="bar-outer mp"><div id="player-mp-bar"></div></div>
+              <span id="p-mp">98/98</span>
+            </div>
+          </div>
+        </div>
+        <div class="party-member" id="party-kohayakawa">
+          <img class="party-face" src="Gemini_Generated_Image_iu67ryiu67ryiu67.png" alt="小早川">
+          <div class="party-stats">
+            <div class="party-name">小早川 LV53</div>
+            <div id="kohayakawa-msg"></div>
+          </div>
+        </div>
+        <div class="party-member" id="party-baba">
+          <img class="party-face" src="Gemini_Generated_Image_ynxkt4ynxkt4ynxk.png" alt="ババ">
+          <div class="party-stats">
+            <div class="party-name">馬場 LV51</div>
+            <div id="baba-party-msg">…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- コマンド -->
+      <div id="battle-commands" class="window">
+        <div class="cmd" data-cmd="attack">たたかう</div>
+        <div class="cmd" data-cmd="magic">まほう</div>
+        <div class="cmd" data-cmd="item">ラーメン</div>
+        <div class="cmd" data-cmd="run">にげる</div>
+      </div>
+    </div>
+
+    <!-- ゲームオーバー -->
+    <div id="screen-gameover" class="screen">
+      <div id="gameover-inner">
+        <div id="gameover-title">GAME OVER</div>
+        <div id="gameover-text" class="window"></div>
+        <div id="gameover-restart" class="window btn-restart">はじめから</div>
+      </div>
+    </div>
+
+    <!-- エンディング -->
+    <div id="screen-ending" class="screen">
+      <div id="ending-inner">
+        <img src="Gemini_Generated_Image_atnpquatnpquatnp.png" alt="市川" id="ending-img">
+        <div id="ending-text" class="window"></div>
+        <div class="tap-hint" id="ending-tap-hint">― タップして続ける ―</div>
+        <div id="ending-restart" class="window btn-restart">はじめから</div>
+      </div>
+    </div>
+
+    <!-- NOVAフラッシュオーバーレイ -->
+    <div id="nova-flash-overlay"></div>
+
+  </div>
+
+  <script src="game.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

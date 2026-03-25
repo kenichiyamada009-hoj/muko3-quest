@@ -1,0 +1,17 @@
+{
+  "name": "婿3クエスト ～事業承継の旅～",
+  "short_name": "婿3クエスト",
+  "description": "事業承継RPG",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000033",
+  "theme_color": "#000033",
+  "icons": [
+    {
+      "src": "Gemini_Generated_Image_ecrvo1ecrvo1ecrv.png",
+      "sizes": "600x600",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,629 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  font-family: 'DotGothic16', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#game {
+  width: 100%;
+  max-width: 420px;
+  height: 100dvh;
+  max-height: 780px;
+  position: relative;
+  background: #000033;
+  overflow: hidden;
+}
+
+/* ===== 共通 ===== */
+.screen {
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  position: absolute;
+  top: 0; left: 0;
+}
+.screen.active {
+  display: flex;
+}
+
+.window {
+  background: #000033;
+  border: 3px solid #aaaaff;
+  padding: 12px 14px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.tap-hint {
+  text-align: center;
+  font-size: 11px;
+  color: #8888cc;
+  padding: 6px;
+  animation: blink 1.2s step-start infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.bar-outer {
+  flex: 1;
+  height: 12px;
+  background: #333366;
+  border: 1px solid #5555aa;
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0 6px;
+}
+.bar-outer > div {
+  height: 100%;
+  background: #00cc44;
+  transition: width 0.4s ease;
+}
+.bar-outer.mp > div {
+  background: #4488ff;
+}
+.label {
+  font-size: 13px;
+  color: #aaaaff;
+  min-width: 22px;
+}
+
+/* ===== フィールド画面 ===== */
+#screen-field {
+  justify-content: space-between;
+  background: #001a00;
+  padding: 8px;
+  gap: 8px;
+}
+
+#field-map {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border: 2px solid #4a8a24;
+  /* スプライトシートの草色に合わせる */
+  background: #5aaa2a;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 草テクスチャっぽいドット模様 */
+#field-map::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.12) 1px, transparent 1px);
+  background-size: 16px 16px;
+  pointer-events: none;
+}
+
+#field-progress {
+  display: flex;
+  gap: 8px;
+  z-index: 1;
+}
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #447744;
+  background: #001100;
+}
+.progress-dot.done {
+  background: #44aa44;
+}
+.progress-dot.current {
+  background: #ffff44;
+  border-color: #ffff44;
+}
+
+#field-chars {
+  display: flex;
+  gap: 20px;
+  z-index: 1;
+}
+
+.field-char {
+  height: 90px;
+  width: auto;
+  image-rendering: pixelated;
+  animation: char-bob 0.4s ease-in-out infinite alternate;
+}
+#fc-ichikawa   { content: url('field_ichikawa.png'); }
+#fc-baba       { content: url('field_baba.png');       animation-delay: 0.13s; }
+#fc-kohayakawa { content: url('field_kohayakawa.png'); animation-delay: 0.26s; }
+
+@keyframes char-bob {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-6px); }
+}
+
+#field-info {
+  font-size: 14px;
+  line-height: 1.8;
+}
+#field-location {
+  color: #88ff88;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+#field-desc {
+  color: #cccccc;
+  font-size: 13px;
+}
+
+#field-advance {
+  cursor: pointer;
+  text-align: center;
+  font-size: 17px;
+  padding: 14px;
+  letter-spacing: 0.2em;
+  border-color: #44ff44;
+  color: #44ff44;
+}
+#field-advance:active {
+  background: #001a00;
+}
+#field-advance.disabled {
+  color: #224422;
+  border-color: #224422;
+  pointer-events: none;
+}
+
+/* ===== 変身アニメーション ===== */
+#screen-transform {
+  justify-content: center;
+  align-items: center;
+  background: #000011;
+}
+
+#transform-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 24px;
+}
+
+#transform-label {
+  font-size: 14px;
+  color: #aaaaff;
+  letter-spacing: 0.1em;
+  text-align: center;
+  min-height: 24px;
+}
+
+#transform-card-wrap {
+  perspective: 700px;
+  width: 240px;
+  height: 240px;
+}
+
+#transform-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.transform-face {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 3px solid #333366;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.transform-back {
+  transform: rotateY(180deg);
+}
+
+@keyframes spin-transform {
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+#transform-card.spinning {
+  animation: spin-transform 1.0s ease-in-out forwards;
+}
+
+#transform-caption {
+  font-size: 20px;
+  color: #ffff88;
+  letter-spacing: 0.15em;
+  text-align: center;
+  min-height: 32px;
+  text-shadow: 0 0 12px #ffff00;
+}
+
+/* ===== タイトル画面 ===== */
+#screen-title {
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 24px;
+  gap: 0;
+}
+
+#title-img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+#title-menu {
+  position: relative;
+  z-index: 2;
+  width: 75%;
+  font-size: 16px;
+  line-height: 2.2;
+  background: rgba(0, 0, 51, 0.88);
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 2px 0;
+  letter-spacing: 0.05em;
+}
+.menu-item.active-item {
+  color: #ffff00;
+}
+
+/* ===== オープニング ===== */
+#screen-opening {
+  justify-content: flex-end;
+  background: #000022;
+  padding: 16px;
+  gap: 8px;
+}
+
+#opening-portrait {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#opening-portrait img {
+  max-height: 100%;
+  max-width: 80%;
+  object-fit: contain;
+  border: 2px solid #333366;
+}
+
+#opening-text {
+  font-size: 15px;
+  min-height: 90px;
+}
+
+/* ===== バトル画面 ===== */
+#screen-battle {
+  justify-content: flex-end;
+  padding: 0;
+  gap: 0;
+  background: #000;
+}
+
+/* 戦場エリア（上部） */
+#battle-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  position: relative;
+  background:
+    linear-gradient(180deg,
+      #0a0020 0%,
+      #1a0040 30%,
+      #2a1060 55%,
+      #1a3010 75%,
+      #0a1a08 100%
+    );
+  overflow: hidden;
+}
+
+/* 星っぽいドット */
+#battle-field::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
+  background-size: 60px 60px, 40px 40px;
+  background-position: 0 0, 20px 20px;
+  pointer-events: none;
+}
+
+#enemy-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px 0;
+  z-index: 1;
+}
+
+#enemy-name-lv {
+  font-size: 13px;
+  color: #ffff88;
+  text-shadow: 0 0 8px #ffaa00;
+}
+
+#enemy-hp-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#enemy-graphic {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  z-index: 1;
+  padding: 8px;
+}
+#enemy-graphic img {
+  max-width: 85%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(255,180,0,0.5));
+}
+#enemy-graphic .enemy-text {
+  color: #ff8844;
+  font-size: 22px;
+  line-height: 1.6;
+  text-shadow: 0 0 12px #ff4400;
+}
+
+/* メッセージ */
+#battle-message {
+  font-size: 14px;
+  min-height: 68px;
+  line-height: 1.8;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+  background: rgba(0, 0, 20, 0.95);
+  padding: 10px 14px;
+}
+
+/* パーティステータス */
+#battle-party {
+  display: flex;
+  border-top: 2px solid #333366;
+  background: #000028;
+}
+
+.party-member {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 4px;
+  border-right: 1px solid #222255;
+  min-width: 0;
+}
+.party-member:last-child { border-right: none; }
+
+.party-face {
+  width: 108px;
+  height: 108px;
+  object-fit: cover;
+  object-position: center 18%;
+  border: 2px solid #444488;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.party-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.party-name {
+  font-size: 10px;
+  color: #ffff88;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.stat-row span:last-child {
+  font-size: 9px;
+  min-width: 44px;
+  text-align: right;
+  color: #88ff88;
+}
+
+#kohayakawa-msg {
+  font-size: 9px;
+  color: #88aaff;
+  line-height: 1.4;
+  text-align: center;
+}
+
+#baba-party-msg {
+  font-size: 9px;
+  color: #ccaaff;
+  text-align: center;
+}
+
+/* ババ裏切り演出 */
+@keyframes baba-betray {
+  0%   { background: transparent; }
+  20%  { background: rgba(255,0,0,0.4); }
+  40%  { background: transparent; }
+  60%  { background: rgba(255,0,0,0.4); }
+  80%  { background: transparent; }
+  100% { background: rgba(255,0,0,0.6); }
+}
+#party-baba.betraying {
+  animation: baba-betray 1.0s ease forwards;
+}
+
+/* コマンド */
+#battle-commands {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+  border-top: 2px solid #333366;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 0;
+  background: #000022;
+}
+
+.cmd {
+  padding: 8px 6px;
+  cursor: pointer;
+  border: 1px solid #222255;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: background 0.1s;
+}
+.cmd:active, .cmd.selected {
+  background: #222266;
+  color: #ffff00;
+}
+.cmd.disabled {
+  color: #444466;
+  pointer-events: none;
+}
+
+/* HPが少ない時の点滅 */
+.hp-danger {
+  animation: hp-blink 0.5s step-start infinite;
+}
+@keyframes hp-blink {
+  0%, 100% { color: #ff4444; }
+  50% { color: #ffaaaa; }
+}
+
+/* ===== ゲームオーバー ===== */
+#screen-gameover {
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  padding: 24px;
+  gap: 20px;
+}
+
+#gameover-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+#gameover-title {
+  font-size: 32px;
+  color: #cc2222;
+  text-shadow: 0 0 20px #ff0000;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+#gameover-text {
+  width: 100%;
+  font-size: 14px;
+  line-height: 2;
+  text-align: center;
+}
+
+/* ===== エンディング ===== */
+#screen-ending {
+  justify-content: flex-end;
+  align-items: center;
+  background: #000022;
+  padding: 16px;
+  gap: 12px;
+}
+
+#ending-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+#ending-img {
+  max-height: 35%;
+  object-fit: contain;
+  border: 2px solid #333366;
+}
+
+#ending-text {
+  width: 100%;
+  font-size: 14px;
+  line-height: 2;
+  text-align: center;
+}
+
+/* ===== NOVAフラッシュオーバーレイ ===== */
+#nova-flash-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== 再スタートボタン ===== */
+.btn-restart {
+  cursor: pointer;
+  text-align: center;
+  font-size: 15px;
+  padding: 12px 32px;
+  background: #000033;
+  border-color: #ffff00;
+  color: #ffff00;
+  letter-spacing: 0.1em;
+}
+.btn-restart:active {
+  background: #222244;
+}
