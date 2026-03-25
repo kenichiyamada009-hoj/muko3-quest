@@ -406,15 +406,15 @@ body {
 
 /* メッセージ */
 #battle-message {
-  font-size: 14px;
-  min-height: 68px;
-  line-height: 1.8;
+  font-size: 13px;
+  min-height: 56px;
+  line-height: 1.7;
   border-top: none;
   border-left: none;
   border-right: none;
   border-radius: 0;
   background: rgba(0, 0, 20, 0.95);
-  padding: 10px 14px;
+  padding: 8px 12px;
 }
 
 /* パーティステータス */
@@ -429,16 +429,16 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 5px 4px;
+  gap: 2px;
+  padding: 3px 4px;
   border-right: 1px solid #222255;
   min-width: 0;
 }
 .party-member:last-child { border-right: none; }
 
 .party-face {
-  width: 108px;
-  height: 108px;
+  width: 82px;
+  height: 82px;
   object-fit: cover;
   object-position: center 18%;
   border: 2px solid #444488;
@@ -514,7 +514,7 @@ body {
 }
 
 .cmd {
-  padding: 8px 6px;
+  padding: 6px 6px;
   cursor: pointer;
   border: 1px solid #222255;
   text-align: center;
