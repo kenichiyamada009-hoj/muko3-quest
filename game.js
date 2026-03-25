@@ -353,6 +353,8 @@ async function startBattle(enemy) {
   G.enemy = { ...enemy, currentHp: enemy.hp };
   G.enemyActionIndex = 0;
   G.cmdLocked = false;
+  G.player.atk = [...PLAYER_BASE.atk]; // shoutスタックリセット
+  G.confusedTurns = 0;
 
   showScreen('battle');
   renderPlayerStatus();
