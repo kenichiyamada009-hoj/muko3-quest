@@ -522,7 +522,7 @@ async function enemyTurn() {
   }
 
   // 若き頃の自分：6ターン超過で小早川が激怒介入
-  if (G.enemy.id === 'wakaijibun' && G.enemyActionIndex >= 6 && G.enemy.currentHp > 0 && !G.kohayakawaAngered) {
+  if (G.enemy.id === 'wakaijibun' && G.enemyActionIndex >= 4 && G.enemy.currentHp > 0 && !G.kohayakawaAngered) {
     await kohayakawaAnger();
     return;
   }
@@ -732,26 +732,35 @@ async function kohayakawaAnger() {
 
 // ===== 小早川NOVA救済イベント =====
 
+function showHint() {
+  const el = document.getElementById('battle-tap-hint');
+  if (el) el.style.display = '';
+}
+function hideHint() {
+  const el = document.getElementById('battle-tap-hint');
+  if (el) el.style.display = 'none';
+}
+
 function waitForTap() {
   return new Promise(resolve => {
-    const handler = () => {
-      document.getElementById('screen-battle').removeEventListener('click', handler);
+    const screen = document.getElementById('screen-battle');
+    const handler = (e) => {
+      e.preventDefault();
+      screen.removeEventListener('click', handler);
+      screen.removeEventListener('touchend', handler);
       resolve();
     };
-    document.getElementById('screen-battle').addEventListener('click', handler);
+    screen.addEventListener('click', handler);
+    screen.addEventListener('touchend', handler, { passive: false });
   });
 }
 
 async function kohayakawaRescue() {
   G.kohayakawaRescued = true;
   const msgEl = document.getElementById('battle-message');
-  const tapHint = document.getElementById('battle-tap-hint');
   const enemyGraphic = document.getElementById('enemy-graphic');
   const enemyNameLv  = document.getElementById('enemy-name-lv');
   const enemyHpBar   = document.getElementById('enemy-hp-bar');
-
-  const showHint = () => { if (tapHint) tapHint.style.display = ''; };
-  const hideHint = () => { if (tapHint) tapHint.style.display = 'none'; };
 
   setCommandsEnabled(false);
   renderPlayerStatus();
